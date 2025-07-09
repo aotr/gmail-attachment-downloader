@@ -1,0 +1,26 @@
+{
+  "name": "gmail-attachment-downloader",
+  "version": "1.0.0",
+  "description": "A Node.js application to download attachments from Gmail using Google APIs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "cli": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "gmail",
+    "attachments",
+    "download",
+    "google-api",
+    "nodejs"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@google-cloud/local-auth": "^3.0.1",
+    "express": "^4.21.2",
+    "googleapis": "^128.0.0"
+  }
+}

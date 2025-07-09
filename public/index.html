@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gmail Attachment Downloader</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-envelope"></i> Gmail Attachment Downloader</h1>
+            <p>Download attachments from your Gmail with advanced filtering</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Filter Panel -->
+            <div class="filter-panel">
+                <h2><i class="fas fa-filter"></i> Search Filters</h2>
+                
+                <div class="filter-group">
+                    <label for="sender">From Sender:</label>
+                    <input type="email" id="sender" placeholder="e.g., billing@company.com">
+                </div>
+
+                <div class="filter-group">
+                    <label for="subject">Subject Contains:</label>
+                    <input type="text" id="subject" placeholder="e.g., Invoice, Report">
+                </div>
+
+                <div class="filter-group">
+                    <label for="dateFrom">Date From:</label>
+                    <input type="date" id="dateFrom">
+                </div>
+
+                <div class="filter-group">
+                    <label for="dateTo">Date To:</label>
+                    <input type="date" id="dateTo">
+                </div>
+
+                <div class="filter-group">
+                    <label for="attachmentType">Attachment Type:</label>
+                    <select id="attachmentType">
+                        <option value="">All Types</option>
+                        <option value="pdf">PDF (.pdf)</option>
+                        <option value="doc">Word (.doc, .docx)</option>
+                        <option value="xls">Excel (.xls, .xlsx)</option>
+                        <option value="img">Images (.jpg, .png, .gif)</option>
+                        <option value="zip">Archives (.zip, .rar)</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="hasAttachment">
+                        <input type="checkbox" id="hasAttachment" checked>
+                        Only emails with attachments
+                    </label>
+                </div>
+
+                <div class="filter-group">
+                    <label for="customQuery">Custom Gmail Query:</label>
+                    <input type="text" id="customQuery" placeholder="Advanced Gmail search syntax">
+                    <small>Leave empty to use filters above</small>
+                </div>
+
+                <button id="searchBtn" class="search-btn">
+                    <i class="fas fa-search"></i> Search Emails
+                </button>
+
+                <button id="downloadAllBtn" class="download-all-btn" disabled>
+                    <i class="fas fa-download"></i> Download All Attachments
+                </button>
+            </div>
+
+            <!-- Results Panel -->
+            <div class="results-panel">
+                <div class="results-header">
+                    <h2><i class="fas fa-list"></i> Search Results</h2>
+                    <div class="status-info">
+                        <span id="authStatus" class="status-badge status-disconnected">
+                            <i class="fas fa-times-circle"></i> Not Authenticated
+                        </span>
+                        <span id="resultCount" class="result-count">0 emails found</span>
+                    </div>
+                </div>
+
+                <div id="loadingSpinner" class="loading" style="display: none;">
+                    <i class="fas fa-spinner fa-spin"></i> Searching emails...
+                </div>
+
+                <div id="authSection" class="auth-section">
+                    <div class="auth-card">
+                        <i class="fas fa-key fa-3x"></i>
+                        <h3>Authentication Required</h3>
+                        <p>Connect to your Gmail account to start downloading attachments</p>
+                        <button id="authBtn" class="auth-btn">
+                            <i class="fab fa-google"></i> Authenticate with Gmail
+                        </button>
+                    </div>
+                </div>
+
+                <div id="resultsContainer" class="results-container" style="display: none;">
+                    <!-- Email results will be populated here -->
+                </div>
+
+                <div id="downloadProgress" class="download-progress" style="display: none;">
+                    <h3><i class="fas fa-download"></i> Download Progress</h3>
+                    <div class="progress-bar">
+                        <div id="progressFill" class="progress-fill"></div>
+                    </div>
+                    <div id="progressText" class="progress-text">0 / 0 attachments downloaded</div>
+                    <div id="downloadLog" class="download-log"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
