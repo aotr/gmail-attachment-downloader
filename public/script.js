@@ -11,6 +11,7 @@ class GmailAttachmentDownloader {
         // Filter elements
         this.senderInput = document.getElementById('sender');
         this.subjectInput = document.getElementById('subject');
+        this.bodyContentInput = document.getElementById('bodyContent');
         this.dateFromInput = document.getElementById('dateFrom');
         this.dateToInput = document.getElementById('dateTo');
         this.attachmentTypeSelect = document.getElementById('attachmentType');
@@ -21,9 +22,12 @@ class GmailAttachmentDownloader {
         this.searchBtn = document.getElementById('searchBtn');
         this.downloadAllBtn = document.getElementById('downloadAllBtn');
         this.authBtn = document.getElementById('authBtn');
+        this.switchAccountBtn = document.getElementById('switchAccountBtn');
 
         // Status elements
         this.authStatus = document.getElementById('authStatus');
+        this.currentAccount = document.getElementById('currentAccount');
+        this.accountEmail = document.getElementById('accountEmail');
         this.resultCount = document.getElementById('resultCount');
 
         // Content sections
@@ -42,10 +46,11 @@ class GmailAttachmentDownloader {
         this.authBtn.addEventListener('click', () => this.authenticate());
         this.searchBtn.addEventListener('click', () => this.searchEmails());
         this.downloadAllBtn.addEventListener('click', () => this.downloadAllAttachments());
+        this.switchAccountBtn.addEventListener('click', () => this.switchAccount());
 
         // Auto-generate query when filters change
         const filterInputs = [
-            this.senderInput, this.subjectInput, this.dateFromInput, 
+            this.senderInput, this.subjectInput, this.bodyContentInput, this.dateFromInput, 
             this.dateToInput, this.attachmentTypeSelect, this.hasAttachmentCheckbox
         ];
         
@@ -58,14 +63,14 @@ class GmailAttachmentDownloader {
         try {
             const response = await fetch('/api/auth-status');
             const data = await response.json();
-            this.updateAuthStatus(data.authenticated);
+            this.updateAuthStatus(data.authenticated, data.userEmail);
         } catch (error) {
             console.error('Error checking auth status:', error);
             this.updateAuthStatus(false);
         }
     }
 
-    updateAuthStatus(authenticated) {
+    updateAuthStatus(authenticated, userEmail = null) {
         this.isAuthenticated = authenticated;
         
         if (authenticated) {
@@ -73,12 +78,23 @@ class GmailAttachmentDownloader {
             this.authStatus.className = 'status-badge status-connected';
             this.authSection.style.display = 'none';
             this.searchBtn.disabled = false;
+            
+            // Show account info and switch button
+            if (userEmail) {
+                this.accountEmail.textContent = userEmail;
+                this.currentAccount.style.display = 'inline-block';
+                this.switchAccountBtn.style.display = 'inline-block';
+            }
         } else {
             this.authStatus.innerHTML = '<i class="fas fa-times-circle"></i> Not Authenticated';
             this.authStatus.className = 'status-badge status-disconnected';
             this.authSection.style.display = 'block';
             this.resultsContainer.style.display = 'none';
             this.searchBtn.disabled = true;
+            
+            // Hide account info and switch button
+            this.currentAccount.style.display = 'none';
+            this.switchAccountBtn.style.display = 'none';
         }
     }
 
@@ -125,6 +141,10 @@ class GmailAttachmentDownloader {
             parts.push(`subject:"${this.subjectInput.value.trim()}"`);
         }
 
+        if (this.bodyContentInput.value.trim()) {
+            parts.push(`"${this.bodyContentInput.value.trim()}"`);
+        }
+
         if (this.dateFromInput.value) {
             parts.push(`after:${this.dateFromInput.value}`);
         }
@@ -138,6 +158,7 @@ class GmailAttachmentDownloader {
                 'pdf': 'filename:pdf',
                 'doc': '(filename:doc OR filename:docx)',
                 'xls': '(filename:xls OR filename:xlsx)',
+                'csv': 'filename:csv',
                 'img': '(filename:jpg OR filename:png OR filename:gif OR filename:jpeg)',
                 'zip': '(filename:zip OR filename:rar OR filename:7z)'
             };
@@ -436,6 +457,35 @@ class GmailAttachmentDownloader {
                 document.body.removeChild(notification);
             }, 300);
         }, 4000);
+    }
+
+    async switchAccount() {
+        try {
+            this.switchAccountBtn.disabled = true;
+            this.switchAccountBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Switching...';
+            
+            const response = await fetch('/api/switch-account', { method: 'POST' });
+            const data = await response.json();
+            
+            if (data.success) {
+                this.updateAuthStatus(true, data.userEmail);
+                this.showNotification('Successfully switched to account: ' + data.userEmail, 'success');
+                
+                // Clear previous results
+                this.emails = [];
+                this.resultsContainer.style.display = 'none';
+                this.resultCount.textContent = '0 emails found';
+                this.downloadAllBtn.disabled = true;
+            } else {
+                throw new Error(data.error || 'Account switch failed');
+            }
+        } catch (error) {
+            console.error('Switch account error:', error);
+            this.showNotification('Account switch failed: ' + error.message, 'error');
+        } finally {
+            this.switchAccountBtn.disabled = false;
+            this.switchAccountBtn.innerHTML = '<i class="fas fa-exchange-alt"></i> Switch Account';
+        }
     }
 }
 

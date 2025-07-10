@@ -170,6 +170,7 @@ body {
     display: flex;
     gap: 15px;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .status-badge {
@@ -402,6 +403,32 @@ body {
     color: #3182ce;
 }
 
+.account-info {
+    background: rgba(255,255,255,0.2);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+}
+
+.switch-account-btn {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.switch-account-btn:hover {
+    background: rgba(255,255,255,0.3);
+    border-color: rgba(255,255,255,0.5);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .main-content {
@@ -426,6 +453,19 @@ body {
     
     .attachments-list {
         grid-template-columns: 1fr;
+    }
+    
+    .container {
+        padding: 10px;
+    }
+    
+    .filter-panel {
+        padding: 20px;
+    }
+    
+    .switch-account-btn {
+        width: 100%;
+        margin-top: 5px;
     }
 }
 

@@ -30,6 +30,11 @@
                 </div>
 
                 <div class="filter-group">
+                    <label for="bodyContent">Body Content:</label>
+                    <input type="text" id="bodyContent" placeholder="e.g., payment, contract, urgent">
+                </div>
+
+                <div class="filter-group">
                     <label for="dateFrom">Date From:</label>
                     <input type="date" id="dateFrom">
                 </div>
@@ -46,6 +51,7 @@
                         <option value="pdf">PDF (.pdf)</option>
                         <option value="doc">Word (.doc, .docx)</option>
                         <option value="xls">Excel (.xls, .xlsx)</option>
+                        <option value="csv">CSV (.csv)</option>
                         <option value="img">Images (.jpg, .png, .gif)</option>
                         <option value="zip">Archives (.zip, .rar)</option>
                     </select>
@@ -76,13 +82,18 @@
             <!-- Results Panel -->
             <div class="results-panel">
                 <div class="results-header">
-                    <h2><i class="fas fa-list"></i> Search Results</h2>
-                    <div class="status-info">
-                        <span id="authStatus" class="status-badge status-disconnected">
-                            <i class="fas fa-times-circle"></i> Not Authenticated
-                        </span>
-                        <span id="resultCount" class="result-count">0 emails found</span>
-                    </div>
+                    <h2><i class="fas fa-list"></i> Search Results</h2>                <div class="status-info">
+                    <span id="authStatus" class="status-badge status-disconnected">
+                        <i class="fas fa-times-circle"></i> Not Authenticated
+                    </span>
+                    <span id="currentAccount" class="account-info" style="display: none;">
+                        <i class="fas fa-user"></i> <span id="accountEmail">No account</span>
+                    </span>
+                    <button id="switchAccountBtn" class="switch-account-btn" style="display: none;">
+                        <i class="fas fa-exchange-alt"></i> Switch Account
+                    </button>
+                    <span id="resultCount" class="result-count">0 emails found</span>
+                </div>
                 </div>
 
                 <div id="loadingSpinner" class="loading" style="display: none;">

@@ -1,4 +1,14 @@
-# Gmail Attachment Downloader
+# Gm## 🎨 Features
+
+- 🌐 **Modern Web UI**: Beautiful, responsive interface with real-time feedback
+- 🔍 **Advanced Search Filters**: Filter by sender, subject, body content, date range, and file type
+- 📎 **Smart Downloads**: Download individual files or batch download all attachments
+- 📅 **Automatic Naming**: Prefix filenames with email date (YYYY-MM-DD format)
+- 🔐 **Secure OAuth 2.0**: No password storage, secure Google authentication
+- 👥 **Multi-Account Support**: Switch between multiple Gmail accounts easily
+- 📊 **Real-time Progress**: Live download progress with detailed logs
+- 🎯 **Gmail Query Builder**: Auto-generates Gmail search queries from filters
+- 📱 **Responsive Design**: Works perfectly on desktop and mobile devicesment Downloader
 
 A Node.js application with a beautiful web UI that automatically downloads attachments from Gmail using Google APIs.
 
@@ -92,15 +102,24 @@ The web UI provides an intuitive way to:
 
 - **From Sender**: Filter emails from specific email addresses
 - **Subject Contains**: Search for keywords in email subjects
+- **Body Content**: Search for text within email content
 - **Date Range**: Limit search to specific date ranges
-- **File Type**: Filter by attachment types (PDF, Word, Excel, Images, Archives)
+- **File Type**: Filter by attachment types (PDF, Word, Excel, CSV, Images, Archives)
 - **Custom Query**: Use advanced Gmail search syntax for complex queries
+
+#### Multi-Account Support:
+
+- **Switch Accounts**: Click "Switch Account" to authenticate with a different Gmail account
+- **Account Display**: Current authenticated account email is displayed in the header
+- **Seamless Switching**: No need to restart the application when switching accounts
 
 #### Example Searches:
 
 - From billing emails: `from:billing@company.com has:attachment`
 - Monthly reports: `subject:"Monthly Report" has:attachment after:2024/01/01`
 - PDF invoices: `subject:invoice filename:pdf`
+- CSV exports: `filename:csv subject:export`
+- Urgent emails with attachments: `"urgent" has:attachment`
 - Large attachments: `has:attachment larger:5M`
 
 ## 📁 File Structure

@@ -144,7 +144,21 @@ app.get('/', (req, res) => {
 app.get('/api/auth-status', async (req, res) => {
   try {
     const client = await loadSavedCredentialsIfExist();
-    res.json({ authenticated: !!client });
+    if (client) {
+      // Get user email from Google
+      try {
+        const gmail = google.gmail({ version: 'v1', auth: client });
+        const profile = await gmail.users.getProfile({ userId: 'me' });
+        res.json({ 
+          authenticated: true, 
+          userEmail: profile.data.emailAddress 
+        });
+      } catch (error) {
+        res.json({ authenticated: true, userEmail: null });
+      }
+    } else {
+      res.json({ authenticated: false });
+    }
   } catch (error) {
     res.json({ authenticated: false });
   }
@@ -260,6 +274,40 @@ app.post('/api/download-attachment', async (req, res) => {
     console.error('Download error:', error);
     res.status(500).json({ 
       error: 'Download failed: ' + error.message 
+    });
+  }
+});
+
+// Switch account
+app.post('/api/switch-account', async (req, res) => {
+  try {
+    // Clear existing tokens to force re-authentication
+    try {
+      await fs.unlink(TOKEN_PATH);
+    } catch (error) {
+      // Token file might not exist, that's okay
+    }
+    
+    // Reset auth client
+    authClient = null;
+    
+    // Authenticate with new account
+    authClient = await authorize();
+    
+    // Get user email
+    const gmail = google.gmail({ version: 'v1', auth: authClient });
+    const profile = await gmail.users.getProfile({ userId: 'me' });
+    
+    res.json({ 
+      success: true, 
+      message: 'Account switched successfully',
+      userEmail: profile.data.emailAddress 
+    });
+  } catch (error) {
+    console.error('Switch account error:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Account switch failed: ' + error.message 
     });
   }
 });
